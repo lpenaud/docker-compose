@@ -11,8 +11,8 @@ services:
     image: ghcr.io/tprasadtp/protonvpn:${PROTONVPN_VERSION:-latest}
     container_name: protonvpn
     environment:
-      PROTONVPN_USERNAME: ${PROTONVPN_USERNAME}
-      PROTONVPN_PASSWORD: ${PROTONVPN_PASSWORD}
+      PROTONVPN_USERNAME: ${PROTONVPN_USERNAME:-}
+      PROTONVPN_PASSWORD: ${PROTONVPN_PASSWORD:-}
       PROTONVPN_SERVER: ${PROTONVPN_SERVER:-P2P}
       PROTONVPN_TIER: ${PROTONVPN_TIER:-0}
       PROTONVPN_EXCLUDE_CIDRS: ${PROTONVPN_EXCLUDE_CIDRS}
@@ -25,7 +25,7 @@ services:
     devices:
       - /dev/net/tun:/dev/net/tun
     expose:
-      - 9091
+      # - 9091
       - 51413
       - 51413/udp
     ports:
@@ -35,16 +35,16 @@ services:
     image: lscr.io/linuxserver/transmission:${TRANSMISSION_VERSION:-latest}
     container_name: transmission
     environment:
-      PUID: ${TRANSMISSION_PUID:-1000}
-      PGID: ${TRANSMISSION_PGID:-1000}
-      TZ: ${TRANSMISSION_TZ:-Europe/London}
-      USER: ${TRANSMISSION_USER}
-      PASS: ${TRANSMISSION_PASSWORD}
+      PUID: ${LSIO_PUID:-1000}
+      PGID: ${LSIO_PGID:-1000}
+      TZ: ${LSIO_TZ:-Europe/Paris}
+      USER: ${TRANSMISSION_USER:-}
+      PASS: ${TRANSMISSION_PASSWORD:-}
     userns_mode: host
     network_mode: service:protonvpn
     volumes:
-      - ${TRANSMISSION_DOWNLOADS:-downloads}:/downloads
-      - config:/config
+      - ${TRANSMISSION_DOWNLOADS:-./downloads}:/downloads
+      - ${TRANSMISSION_CONFIG:-config}:/config
     depends_on:
       - protonvpn
     restart: unless-stopped
