@@ -1,6 +1,3 @@
-volumes:
-  config:
-
 networks:
   internet:
   proxy:
@@ -44,7 +41,7 @@ services:
     network_mode: service:protonvpn
     volumes:
       - ${TRANSMISSION_DOWNLOADS:-./downloads}:/downloads
-      - ${TRANSMISSION_CONFIG:-config}:/config
+      - ${TRANSMISSION_CONFIG:-./config}:/config
     depends_on:
       - protonvpn
     restart: unless-stopped
