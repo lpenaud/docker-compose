@@ -1,60 +1,100 @@
-networks:
-  dbnet:
-  redisnet:
+version: '3'
 
 services:
-  mariadb:
-    image: ${MARIADB_IMAGE-mariadb}:10.5
-    command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
+  db:
+    image: postgres:11-alpine
     restart: always
     volumes:
-      - db_data:/var/lib/mysql
+      - db:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: "${POSTGRES_PASSWORD:-nextcloud}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:-}"
+      POSTGRES_DB: "${POSTGRES_DB:-nextcloud}"
     networks:
       - dbnet
-    environment:
-      MARIADB_ROOT_PASSWORD: ${MARIADB_PASSWORD}
-      MARIADB_DATABASE: ${MARIADB_DATABASE}
-      MARIADB_USER: ${MARIADB_USER}
-      MARIADB_PASSWORD: ${MARIADB_PASSWORD}
-    expose:
-      - 3306
 
   redis:
-    image: ${REDIS_IMAGE-redis}:alpine3.16
+    image: redis:7-alpine
     restart: always
     networks:
       - redisnet
-    expose:
-      - 6379
 
-  nc:
-    image: ${NEXTCLOUD_IMAGE-nextcloud}:production-fpm-alpine
+  app:
+    build: ./cron
     restart: always
-    ports:
-      - 8081:80
     volumes:
-      - nc_data:/var/www/html
-    networks:
-      - redisnet
-      - dbnet
+      - nextcloud:/var/www/html
     environment:
+      POSTGRES_HOST: db
+      POSTGRES_USER: "${POSTGRES_USER:-nextcloud}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:-}"
+      POSTGRES_DB: "${POSTGRES_DB:-nextcloud}"
       REDIS_HOST: redis
-      MYSQL_HOST: mariadb
-      MYSQL_DATABASE: ${MARIADB_DATABASE}
-      MYSQL_USER: ${MARIADB_USER}
-      MYSQL_PASSWORD: ${MARIADB_PASSWORD}
     depends_on:
-      - mariadb
+      - db
       - redis
+    networks:
+      - dbnet
+      - redisnet
+      - webnet
 
-  nginx:
-    # Use alpine next
-    image: ${NGINX_IMAGE-nginxproxy/nginx-proxy}:latest
+  web:
+    build: ./web
+    restart: always
+    volumes:
+      - nextcloud:/var/www/html:ro
+      - ${NEXTCLOUD_DATA_DIR}:/var/www/html/data
+    environment:
+      VIRTUAL_HOST: "${LETSENCRYPT_HOST}"
+      LETSENCRYPT_HOST: "${LETSENCRYPT_HOST}"
+      LETSENCRYPT_EMAIL: "${LETSENCRYPT_EMAIL}"
+    depends_on:
+      - app
+    networks:
+      - proxy-tier
+      - default
+      - webnet
+
+  proxy:
+    build: ./proxy
+    restart: always
     ports:
       - 80:80
+      - 443:443
+    labels:
+      com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy: "true"
     volumes:
+      - certs:/etc/nginx/certs:ro
+      - vhost.d:/etc/nginx/vhost.d
+      - html:/usr/share/nginx/html
       - /var/run/docker.sock:/tmp/docker.sock:ro
+    networks:
+      - proxy-tier
+
+  letsencrypt-companion:
+    image: nginxproxy/acme-companion
+    restart: always
+    volumes:
+      - certs:/etc/nginx/certs
+      - acme:/etc/acme.sh
+      - vhost.d:/etc/nginx/vhost.d
+      - html:/usr/share/nginx/html
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - proxy-tier
+    depends_on:
+      - proxy
 
 volumes:
-  db_data:
-  nc_data:
+  db:
+  nextcloud:
+  certs:
+  acme:
+  vhost.d:
+  html:
+
+networks:
+  proxy-tier:
+  dbnet:
+  redisnet:
+  webnet:
