@@ -1,0 +1,60 @@
+networks:
+  dbnet:
+  redisnet:
+
+services:
+  mariadb:
+    image: ${MARIADB_IMAGE-mariadb}:10.5
+    command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
+    restart: always
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - dbnet
+    environment:
+      MARIADB_ROOT_PASSWORD: ${MARIADB_PASSWORD}
+      MARIADB_DATABASE: ${MARIADB_DATABASE}
+      MARIADB_USER: ${MARIADB_USER}
+      MARIADB_PASSWORD: ${MARIADB_PASSWORD}
+    expose:
+      - 3306
+
+  redis:
+    image: ${REDIS_IMAGE-redis}:alpine3.16
+    restart: always
+    networks:
+      - redisnet
+    expose:
+      - 6379
+
+  nc:
+    image: ${NEXTCLOUD_IMAGE-nextcloud}:production-fpm-alpine
+    restart: always
+    ports:
+      - 8081:80
+    volumes:
+      - nc_data:/var/www/html
+    networks:
+      - redisnet
+      - dbnet
+    environment:
+      REDIS_HOST: redis
+      MYSQL_HOST: mariadb
+      MYSQL_DATABASE: ${MARIADB_DATABASE}
+      MYSQL_USER: ${MARIADB_USER}
+      MYSQL_PASSWORD: ${MARIADB_PASSWORD}
+    depends_on:
+      - mariadb
+      - redis
+
+  nginx:
+    # Use alpine next
+    image: ${NGINX_IMAGE-nginxproxy/nginx-proxy}:latest
+    ports:
+      - 80:80
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+
+volumes:
+  db_data:
+  nc_data:
