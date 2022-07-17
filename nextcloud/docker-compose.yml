@@ -20,7 +20,11 @@ services:
       - redisnet
 
   app:
-    build: ./cron
+    build:
+      context: ./nextcloud
+      dockerfile: Dockerfile
+      args:
+        IMAGE_VERSION: 23
     restart: always
     volumes:
       - nextcloud:/var/www/html
