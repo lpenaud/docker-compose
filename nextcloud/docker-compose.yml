@@ -3,6 +3,7 @@ version: '3'
 services:
   db:
     image: postgres:11-alpine
+    container_name: nextcloud_pg
     restart: always
     volumes:
       - db:/var/lib/postgresql/data
@@ -25,6 +26,7 @@ services:
       dockerfile: Dockerfile
       args:
         IMAGE_VERSION: 23
+    container_name: nextcloud
     restart: always
     volumes:
       - nextcloud:/var/www/html
