@@ -8,5 +8,6 @@ RUN apk add --no-cache supervisor ffmpeg imagemagick \
   && mkdir /var/log/supervisord /var/run/supervisord
 
 COPY supervisord.conf /
+COPY config/*.config.php /usr/src/nextcloud/config/
 
 CMD ["/usr/bin/supervisord", "-c", "/supervisord.conf"]
