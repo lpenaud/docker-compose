@@ -1,10 +1,9 @@
 #!/bin/bash
 
-declare -a urls files
+declare -a urls
 declare -i n timeout=1 \
   start_index="${DOWNLOAD_START_INDEX}" \
-  end_index="${DOWNLOAD_END_INDEX}" \
-  index
+  end_index="${DOWNLOAD_END_INDEX}"
 declare -u country="${DOWNLOAD_COUNTRY}"
 declare url
 
@@ -18,14 +17,25 @@ function add_url () {
 }
 
 function vpn_download () {
-  (( n++ ))
   protonvpn c "${country}#${2}"
   plowdown -t "${timeout}" "${1}"
-  # If the timeout reached
-  if [ $? -eq 5 ] && [ $n -lt 3 ]; then
+}
+
+function main () {
+  local -i index="${start_index}"
+  while [ $# -ne 0 ]; do
+    vpn_download "${1}" "${index}"
+    n=$?
+    (( index++ ))
+    if [ "${index}" -gt "${end_index}" ]; then
+      index="${start_index}"
+    fi
+    # If server already use
     # Retry with other connexion
-    vpn_download "${1}"
-  fi
+    if [ "${n}" -ne 5 ]; then
+      shift
+    fi
+  done
 }
 
 while [ $# -ne 0 ]; do
@@ -66,12 +76,4 @@ if [ "${#urls[@]}" -eq 0 ]; then
   exit 1
 fi
 
-index="${start_index}"
-for url in "${urls[@]}"; do
-  n=0
-  vpn_download "${url}" "${index}"
-  (( index++ ))
-  if [ "${index}" -gt "${end_index}" ]; then
-    index="${start_index}"
-  fi
-done
+main "${urls[@]}"
