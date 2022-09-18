@@ -35,7 +35,7 @@ function load_env_file () {
 
 load_env_file "${1}"
 
-declare -r BAK_DIR="${BACKUP_DIR}/$(date -Iseconds)"
+declare -r BAK_DIR="${BACKUP_DIR}/$(date -I)"
 declare -r NC_USER="www-data" NC_CONTAINER="nextcloud" NC_BAK="${BAK_DIR}/nextcloud-dirbkp"
 declare -r PG_CONTAINER="nextcloud_pg" PG_BAK="${BAK_DIR}/pg.bak"
 
