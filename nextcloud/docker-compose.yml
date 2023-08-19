@@ -54,8 +54,8 @@ services:
   web:
     build: ./web
     restart: always
-    volumes:
-      - nextcloud:/var/www/html:ro
+    volumes_from:
+      - app:ro
     ports:
       - 8080:80
     depends_on:
