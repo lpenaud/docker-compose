@@ -34,7 +34,7 @@ services:
     container_name: nextcloud
     restart: always
     volumes:
-      - ${NEXTCLOUD_HTML:-html}:/var/www/html
+      - ${NEXTCLOUD_HTML:-./html}:/var/www/html
     environment:
       POSTGRES_HOST: db
       POSTGRES_USER: "${POSTGRES_USER:-nextcloud}"
