@@ -30,7 +30,7 @@ services:
       context: ./nextcloud
       dockerfile: Dockerfile
       args:
-        IMAGE_VERSION: 25
+        IMAGE_VERSION: 26
     container_name: nextcloud
     restart: always
     volumes:
