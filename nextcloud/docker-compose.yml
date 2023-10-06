@@ -1,8 +1,7 @@
 version: '3'
 
 networks:
-  dbnet:
-  redisnet:
+  appnet:
   webnet:
 
 services:
@@ -17,13 +16,13 @@ services:
       POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:?}"
       POSTGRES_DB: "${POSTGRES_DB:-nextcloud}"
     networks:
-      - dbnet
+      - appnet
 
   redis:
     image: redis:7-alpine
     restart: always
     networks:
-      - redisnet
+      - appnet
 
   app:
     build:
@@ -33,6 +32,8 @@ services:
         IMAGE_VERSION: 27
     container_name: nextcloud
     restart: always
+    cap_add:
+      - SYS_NICE
     volumes:
       - ${NEXTCLOUD_HTML:-./html}:/var/www/html
     environment:
@@ -46,9 +47,9 @@ services:
     depends_on:
       - db
       - redis
+      - imaginary
     networks:
-      - dbnet
-      - redisnet
+      - appnet
       - webnet
 
   web:
@@ -63,6 +64,25 @@ services:
     networks:
       - default
       - webnet
+
+  imaginary:
+    # Use alpine
+    # See: https://github.com/nextcloud/all-in-one/tree/main/Containers/imaginary
+    image: nextcloud/aio-imaginary:latest
+    expose:
+      - 9000
+    restart: unless-stopped
+    cap_add:
+      - SYS_NICE
+    networks:
+      - appnet
+    entrypoint:
+      - imaginary
+      - -return-size
+      - -max-allowed-resolution
+      - "222.2"
+      - -concurrency
+      - "${IMAGINARY_CONCURRENCY:-20}"
 
 volumes:
   db:
