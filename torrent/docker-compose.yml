@@ -44,15 +44,3 @@ services:
     depends_on:
       - protonvpn
     restart: unless-stopped
-
-  transmission-tracker-add:
-    image: andrewmhub/transmission-tracker-add:latest
-    container_name: transmission-tracker-add
-    userns_mode: host
-    network_mode: service:protonvpn
-    environment:
-      HOSTPORT: localhost:9091
-      TR_AUTH: ${TRANSMISSION_USER:-}:${TRANSMISSION_PASSWORD:-}
-    depends_on:
-      - transmission
-    restart: unless-stopped

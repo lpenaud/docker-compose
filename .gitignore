@@ -1,3 +1,6 @@
 # Dot env
 .env*
 !.env.sample
+
+# Vagrant files
+.vagrant
