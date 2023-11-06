@@ -5,7 +5,11 @@ networks:
 
 services:
   protonvpn:
-    image: ghcr.io/tprasadtp/protonvpn:${PROTONVPN_VERSION:-latest}
+    build:
+      context: ./protonvpn
+      dockerfile: Dockerfile
+      args:
+        PROTONVPN_VERSION: ${PROTONVPN_VERSION:-5.2}
     container_name: protonvpn
     environment:
       PROTONVPN_USERNAME: ${PROTONVPN_USERNAME:-}
