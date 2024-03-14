@@ -1,33 +1,20 @@
-networks:
-  internet:
-  proxy:
-    internal: true
-
 services:
   protonvpn:
-    build:
-      context: ./protonvpn
-      dockerfile: Dockerfile
-      args:
-        PROTONVPN_VERSION: ${PROTONVPN_VERSION:-5.2}
+    image: ghcr.io/tprasadtp/protonwire:${PROTONVPN_VERSION}
+    init: true
     container_name: protonvpn
     environment:
-      PROTONVPN_USERNAME: ${PROTONVPN_USERNAME:-}
-      PROTONVPN_PASSWORD: ${PROTONVPN_PASSWORD:-}
-      PROTONVPN_SERVER: ${PROTONVPN_SERVER:-P2P}
-      PROTONVPN_TIER: ${PROTONVPN_TIER:-0}
-      PROTONVPN_EXCLUDE_CIDRS: ${PROTONVPN_EXCLUDE_CIDRS}
+      PROTONVPN_SERVER: ${PROTONVPN_SERVER:-}
+      WIREGUARD_PRIVATE_KEY: ${WIREGUARD_PRIVATE_KEY:-}
     restart: unless-stopped
-    networks:
-      - internet
-      - proxy
     cap_add:
       - NET_ADMIN
-    devices:
-      - /dev/net/tun:/dev/net/tun
-    expose:
-      - 51413
-      - 51413/udp
+    sysctls:
+      net.ipv4.conf.all.rp_filter: 2
+      net.ipv6.conf.all.disable_ipv6: 1
+    volumes:
+      - type: tmpfs
+        target: /tmp
     ports:
       - 9091:9091
 
