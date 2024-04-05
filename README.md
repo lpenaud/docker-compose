@@ -10,7 +10,7 @@ Credits:
 
 - [tprasadtp/protonvpn](https://github.com/tprasadtp/protonvpn-docker)
 - [linuxserver/docker-transmission](https://github.com/linuxserver/docker-transmission)
-- [andrewmhub/transmission-tracker-add](https://github.com/AndrewMarchukov/tracker-add)
+- [ngosang/trackerslist](https://github.com/ngosang/trackerslist)
 
 I use [tremotesf-android](https://github.com/equeim/tremotesf-android) on my phone to control remotely Transmission.
 
@@ -27,5 +27,3 @@ Credits:
 - [Nextcloud](https://hub.docker.com/_/nextcloud/)
 - [Nextcloud cron](https://github.com/nextcloud/docker/tree/master/.examples/dockerfiles/cron/fpm-alpine)
 - [Nginx](https://hub.docker.com/_/nginx/)
-- [Nginx proxy](https://hub.docker.com/r/nginxproxy/nginx-proxy)
-- [ACME companion](https://hub.docker.com/r/nginxproxy/acme-companion)
