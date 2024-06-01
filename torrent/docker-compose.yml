@@ -1,7 +1,8 @@
 services:
   protonvpn:
-    image: ghcr.io/tprasadtp/protonwire:${PROTONVPN_VERSION}
-    init: true
+    image: ghcr.io/tprasadtp/protonwire:${PROTONVPN_VERSION:-7.5.2}
+    entrypoint: ["/bin/sh", "-c"]
+    command: "/config/init.sh"
     container_name: protonvpn
     environment:
       PROTONVPN_SERVER: ${PROTONVPN_SERVER:-}
@@ -15,6 +16,13 @@ services:
     volumes:
       - type: tmpfs
         target: /tmp
+      - ./protonvpn:/config:ro
+      - port:/protonvpn-port
+    healthcheck:
+      test: /config/protonvpn-healthcheck.sh
+      interval: 40s
+      timeout: 5s
+      retries: 3
     ports:
       - 9091:9091
 
@@ -32,6 +40,12 @@ services:
     volumes:
       - ${TRANSMISSION_DOWNLOADS:-./downloads}:/downloads
       - ${TRANSMISSION_CONFIG:-./config}:/config
+      - port:/protonvpn-port:ro
+      - ./transmission:/custom-cont-init.d:ro
     depends_on:
-      - protonvpn
+      protonvpn:
+          condition: service_healthy
     restart: unless-stopped
+
+volumes:
+  port:
