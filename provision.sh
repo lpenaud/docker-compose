@@ -21,3 +21,7 @@ curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | sudo 
 apt-get update
 # Install all software from the new repositories
 apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin docker-ce-rootless-extras docker-buildx-plugin docker-compose caddy
+
+# Vagrant user access to Docker daemon
+groupadd docker
+usermod -aG docker vagrant
