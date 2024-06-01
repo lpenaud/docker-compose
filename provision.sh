@@ -5,7 +5,7 @@ apt-get update
 # Upgrade all installed software
 apt-get upgrade -y
 # Install all dependencies from the official repositories
-apt-get install -y gnupg apt-transport-https ca-certificates curl debian-keyring debian-archive-keyring vim
+apt-get install -y gnupg apt-transport-https ca-certificates curl debian-keyring debian-archive-keyring vim wireguard
 
 # Add Docker APT repository 
 install -m 0755 -d /etc/apt/keyrings
