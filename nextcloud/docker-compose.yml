@@ -27,7 +27,7 @@ services:
       context: ./nextcloud
       dockerfile: Dockerfile
       args:
-        IMAGE_VERSION: 29
+        IMAGE_VERSION: 30
     container_name: nextcloud
     restart: always
     cap_add:
