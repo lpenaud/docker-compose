@@ -23,7 +23,7 @@ services:
       - port:/protonvpn-port
       - /lib/modules:/lib/modules
     healthcheck:
-      test: /custom-cont-init.d/protonvpn-healthcheck.sh
+      test: /custom-services.d/protonvpn-healthcheck.sh
       interval: 40s
       timeout: 5s
       retries: 3
