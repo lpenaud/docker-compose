@@ -20,11 +20,10 @@ services:
       net.ipv4.conf.all.src_valid_mark: 1
     volumes:
       - ./protonvpn/config:/config
-      - ./protonvpn:/protonvpn:ro
       - port:/protonvpn-port
       - /lib/modules:/lib/modules
     healthcheck:
-      test: /protonvpn/healthcheck.sh
+      test: /healthcheck.sh
       interval: 40s
       timeout: 5s
       retries: 3
