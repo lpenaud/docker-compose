@@ -1,8 +1,10 @@
 services:
   protonvpn:
-    image: lscr.io/linuxserver/wireguard:latest
-    #entrypoint: ["/bin/sh", "-c"]
-    #command: "/config/init.sh"
+    build:
+      context: ./protonvpn
+      dockerfile: Dockerfile
+      args:
+        WIREGUARD_VERSION: "${WIREGUARD_VERSION:-latest}" 
     container_name: protonvpn
     environment:
       PUID: ${LSIO_PUID:-1000}
@@ -16,17 +18,15 @@ services:
       net.ipv6.conf.all.disable_ipv6: 1
       net.ipv4.conf.all.src_valid_mark: 1
     volumes:
-      - type: tmpfs
-        target: /tmp
       - ./protonvpn/config:/config
       - ./protonvpn:/protonvpn:ro
       - port:/protonvpn-port
       - /lib/modules:/lib/modules
-        #healthcheck:
-        #test: /config/protonvpn-healthcheck.sh
-        #interval: 40s
-        #timeout: 5s
-        #retries: 3
+    healthcheck:
+      test: /custom-cont-init.d/protonvpn-healthcheck.sh
+      interval: 40s
+      timeout: 5s
+      retries: 3
     ports:
       - 9091:9091
 
