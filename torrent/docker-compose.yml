@@ -10,6 +10,7 @@ services:
       PUID: ${LSIO_PUID:-1000}
       PGID: ${LSIO_PGID:-1000}
       TZ: ${LSIO_TZ:-Europe/Paris}
+      PROTONVPN_SERVER: ${PROTONVPN_SERVER:?}
     restart: unless-stopped
     cap_add:
       - NET_ADMIN
