@@ -1,26 +1,29 @@
 services:
   protonvpn:
-    image: ghcr.io/tprasadtp/protonwire:${PROTONVPN_VERSION:-7.5.2}
-    entrypoint: ["/bin/sh", "-c"]
-    command: "/config/init.sh"
+    build:
+      context: ./protonvpn
+      dockerfile: Dockerfile
+      args:
+        WIREGUARD_VERSION: "${WIREGUARD_VERSION:-latest}" 
     container_name: protonvpn
     environment:
-      PROTONVPN_SERVER: ${PROTONVPN_SERVER:-}
-      WIREGUARD_PRIVATE_KEY: ${WIREGUARD_PRIVATE_KEY:-}
-      IPCHECK_INTERVAL: 0
+      PUID: ${LSIO_PUID:-1000}
+      PGID: ${LSIO_PGID:-1000}
+      TZ: ${LSIO_TZ:-Europe/Paris}
+      PROTONVPN_SERVER: ${PROTONVPN_SERVER:?}
     restart: unless-stopped
     cap_add:
       - NET_ADMIN
     sysctls:
       net.ipv4.conf.all.rp_filter: 2
       net.ipv6.conf.all.disable_ipv6: 1
+      net.ipv4.conf.all.src_valid_mark: 1
     volumes:
-      - type: tmpfs
-        target: /tmp
-      - ./protonvpn:/config:ro
+      - ./protonvpn/config:/config
       - port:/protonvpn-port
+      - /lib/modules:/lib/modules
     healthcheck:
-      test: /config/protonvpn-healthcheck.sh
+      test: /healthcheck.sh
       interval: 40s
       timeout: 5s
       retries: 3

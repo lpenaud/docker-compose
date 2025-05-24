@@ -8,7 +8,7 @@ Use Proton VPN to share some files in P2P with the BitTorrent client Transmissio
 
 Credits:
 
-- [tprasadtp/protonvpn](https://github.com/tprasadtp/protonvpn-docker)
+- [linuxserver/docker-wireguard](https://github.com/linuxserver/docker-wireguard)
 - [linuxserver/docker-transmission](https://github.com/linuxserver/docker-transmission)
 - [ngosang/trackerslist](https://github.com/ngosang/trackerslist)
 
