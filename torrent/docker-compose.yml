@@ -40,7 +40,7 @@ services:
       USER: ${TRANSMISSION_USER:-}
       PASS: ${TRANSMISSION_PASSWORD:-}
       TRACKERS_URL: ${TRANSMISSION_TRACKERS_URL:-}
-      TORRENT_DONE: "${TORRENT_DONE:-}"
+      TORRENT_DONE: "${TRANSMISSION_TORRENT_DONE:-}"
     userns_mode: host
     network_mode: service:protonvpn
     volumes:
