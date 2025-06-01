@@ -40,13 +40,14 @@ services:
       USER: ${TRANSMISSION_USER:-}
       PASS: ${TRANSMISSION_PASSWORD:-}
       TRACKERS_URL: ${TRANSMISSION_TRACKERS_URL:-}
+      TORRENT_DONE: "${TRANSMISSION_TORRENT_DONE:-}"
     userns_mode: host
     network_mode: service:protonvpn
     volumes:
       - ${TRANSMISSION_DOWNLOADS:-./downloads}:/downloads
       - ${TRANSMISSION_CONFIG:-./config}:/config
       - port:/protonvpn-port:ro
-      - ./transmission:/custom-cont-init.d:ro
+      - ./transmission/custom-cont-init.d:/custom-cont-init.d:ro
     depends_on:
       protonvpn:
           condition: service_healthy
