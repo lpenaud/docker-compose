@@ -14,6 +14,8 @@ Credits:
 
 I use [tremotesf-android](https://github.com/equeim/tremotesf-android) on my phone to control remotely Transmission.
 
+Transmission doc : https://github.com/transmission/transmission/blob/main/docs
+
 ## Nextcloud
 
 Initialise nextcloud and all needed services for its execution.
