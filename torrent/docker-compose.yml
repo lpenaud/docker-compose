@@ -52,6 +52,11 @@ services:
       - ${TRANSMISSION_DOWNLOADS:-./downloads}:/downloads
       - ${TRANSMISSION_CONFIG:-./config}:/config
       - port:/protonvpn-port:ro
+    healthcheck:
+      test: /healthcheck.sh
+      interval: 50s
+      timeout: 5s
+      retries: 3
     depends_on:
       protonvpn:
           condition: service_healthy
