@@ -1,18 +1,36 @@
 #!/bin/bash
 
-declare -r settings="$(cat /config/settings.json)"
+# Exit on failure
+set -e
+
+# expression backup outfile
+function jq::safe () {
+  local expr="${1}" backup="${2}" outfile="${3}"
+  # If json is valid then commit
+  if jq -e "${expr}" < "${backup}" > "${outfile}"; then
+    cp "${outfile}" "${backup}"
+    return 0
+  fi
+  # Else rollback
+  cp "${backup}" "${outfile}"
+  return 1
+}
+
+declare -r settings="/config/settings.json" bak="/config/settings.bak.json"
 declare jq_expr
 
-jq_expr=".[\"peer-port\"]=$(cat /protonvpn-port/protonvpn-port)"
+# Backup settings
+cp "${settings}" "${bak}"
+
 if [ -n "${TRACKERS_URL}" ]; then
-  jq_expr+=" | .[\"default-trackers\"]=\"$(curl "${TRACKERS_URL}")\""
+  printf -v jq_expr '.["default-trackers"]="%s"' "$(curl -s "${TRACKERS_URL}")"
+  jq::safe "${jq_expr}" "${bak}" "${settings}"
 fi
+
 if [ -n "${TORRENT_DONE}" ]; then
-  jq_expr+=" | .[\"script-torrent-done-enabled\"]=true"
-  jq_expr+=" | .[\"script-torrent-done-filename\"]=\"${TORRENT_DONE}\""
+  printf -v jq_expr '.["script-torrent-done-enabled"]=true | .["script-torrent-done-filename"]="%s"' \
+    "${TORRENT_DONE}"
 else
-  jq_expr+=" | .[\"script-torrent-done-enabled\"]=false"
+  printf -v jq_expr '.["script-torrent-done-enabled"]=false'
 fi
-
-echo "${settings}" | jq "${jq_expr}" > /config/settings.json
-
+jq::safe "${jq_expr}" "${bak}" "${settings}"

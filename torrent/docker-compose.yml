@@ -31,7 +31,11 @@ services:
       - 9091:9091
 
   transmission:
-    image: lscr.io/linuxserver/transmission:${TRANSMISSION_VERSION:-latest}
+    build:
+      context: ./transmission
+      dockerfile: Dockerfile
+      args:
+        TRANSMISSION_VERSION: "${TRANSMISSION_VERSION:-latest}"
     container_name: transmission
     environment:
       PUID: ${LSIO_PUID:-1000}
@@ -47,7 +51,11 @@ services:
       - ${TRANSMISSION_DOWNLOADS:-./downloads}:/downloads
       - ${TRANSMISSION_CONFIG:-./config}:/config
       - port:/protonvpn-port:ro
-      - ./transmission/custom-cont-init.d:/custom-cont-init.d:ro
+    healthcheck:
+      test: /healthcheck.sh
+      interval: 50s
+      timeout: 5s
+      retries: 3
     depends_on:
       protonvpn:
           condition: service_healthy
