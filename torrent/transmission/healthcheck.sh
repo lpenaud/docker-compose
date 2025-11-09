@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function test-port () {
-  transmission-remote -ne -pt
+  [[ "$(transmission-remote -ne -pt)" =~ Yes$ ]]
 }
 
 test-port && exit 0
