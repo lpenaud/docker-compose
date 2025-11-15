@@ -1,4 +1,9 @@
 networks:
+  default:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: "${SUBNET:?}"
   appnet:
   webnet:
 
@@ -42,6 +47,7 @@ services:
       REDIS_HOST: redis
       PHP_MEMORY_LIMIT: "${PHP_MEMORY_LIMIT:-512M}"
       PHP_UPLOAD_LIMIT: "${PHP_UPLOAD_LIMIT:-512M}"
+      TRUSTED_PROXIES: "${SUBNET:?}"
     depends_on:
       - db
       - redis
