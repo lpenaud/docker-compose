@@ -9,7 +9,7 @@ networks:
 
 services:
   db:
-    image: postgres:15-alpine
+    image: postgres:17-alpine
     container_name: nextcloud_pg
     restart: always
     volumes:
