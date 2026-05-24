@@ -11,7 +11,6 @@ services:
       VPN_PORT_FORWARDING_PROVIDER: protonvpn
       VPN_PORT_FORWARDING_STATUS_FILE: /protonvpn-port/protonvpn-port
       SERVER_COUNTRIES: ${VPN_COUNTRIES:?}
-      FIREWALL_OUTBOUND_SUBNETS: "${FIREWALL_OUTBOUND_SUBNETS}"
     restart: unless-stopped
     cap_add:
       - NET_ADMIN
