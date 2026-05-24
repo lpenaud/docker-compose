@@ -9,7 +9,8 @@ declare email password
 
 read -p "Proton email: " email
 read -s -p "Proton password: " password
-docker run --rm -v /yourpath:/gluetun qmcgaw/gluetun \
+docker run --rm -v "${DIRNAME}/gluetun:/gluetun" \
+  qmcgaw/gluetun \
   update \
   -enduser \
   -providers protonvpn \
