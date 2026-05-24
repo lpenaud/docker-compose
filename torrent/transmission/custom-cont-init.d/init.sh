@@ -35,4 +35,3 @@ else
 fi
 jq::safe "${jq_expr}" "${bak}" "${settings}"
 printf -v jq_expr '.["peer-port"]=%d' "$(< /protonvpn-port/protonvpn-port)"
-jq::safe "${jq_expr}" "${bak}" "${settings}"

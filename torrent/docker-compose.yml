@@ -11,6 +11,7 @@ services:
       VPN_PORT_FORWARDING_PROVIDER: protonvpn
       VPN_PORT_FORWARDING_STATUS_FILE: /protonvpn-port/protonvpn-port
       SERVER_COUNTRIES: ${VPN_COUNTRIES:?}
+      VPN_PORT_FORWARDING_DOWN_COMMAND: /bin/rm /protonvpn-port/protonvpn-port
     restart: unless-stopped
     cap_add:
       - NET_ADMIN
