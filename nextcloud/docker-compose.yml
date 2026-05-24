@@ -1,9 +1,6 @@
 networks:
   default:
     driver: bridge
-    ipam:
-      config:
-        - subnet: "${SUBNET:?}"
   appnet:
   webnet:
 

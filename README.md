@@ -8,13 +8,19 @@ Use Proton VPN to share some files in P2P with the BitTorrent client Transmissio
 
 Credits:
 
-- [linuxserver/docker-wireguard](https://github.com/linuxserver/docker-wireguard)
+-[qdm12/gluetun](https://github.com/passteque/gluetun)
 - [linuxserver/docker-transmission](https://github.com/linuxserver/docker-transmission)
 - [ngosang/trackerslist](https://github.com/ngosang/trackerslist)
 
 I use [tremotesf-android](https://github.com/equeim/tremotesf-android) on my phone to control remotely Transmission.
 
-Transmission doc : https://github.com/transmission/transmission/blob/main/docs
+Transmission doc: https://github.com/transmission/transmission/blob/main/docs
+
+Gluetun-wiki links:
+
+- [Healthcheck](https://github.com/qdm12/gluetun-wiki/blob/main/faq/healthcheck.md#healthcheck)
+- [VPN server port forwarding](https://github.com/qdm12/gluetun-wiki/blob/main/setup/advanced/vpn-port-forwarding.md)
+- [VPN servers](https://github.com/qdm12/gluetun-wiki/blob/main/setup/servers.md#update-using-the-command-line)
 
 ## Nextcloud
 

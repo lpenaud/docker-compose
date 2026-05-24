@@ -1,32 +1,25 @@
 services:
   protonvpn:
-    build:
-      context: ./protonvpn
-      dockerfile: Dockerfile
-      args:
-        WIREGUARD_VERSION: "${WIREGUARD_VERSION:-latest}" 
+    image: qmcgaw/gluetun:v3
     container_name: protonvpn
     environment:
-      PUID: ${LSIO_PUID:-1000}
-      PGID: ${LSIO_PGID:-1000}
-      TZ: ${LSIO_TZ:-Europe/Paris}
-      PROTONVPN_SERVER: ${PROTONVPN_SERVER:?}
+      VPN_SERVICE_PROVIDER: protonvpn
+      VPN_TYPE: wireguard
+      WIREGUARD_PRIVATE_KEY: ${WIREGUARD_PRIVATE_KEY:?}
+      PORT_FORWARD_ONLY: on
+      VPN_PORT_FORWARDING: on
+      VPN_PORT_FORWARDING_PROVIDER: protonvpn
+      VPN_PORT_FORWARDING_STATUS_FILE: /protonvpn-port/protonvpn-port
+      SERVER_COUNTRIES: ${VPN_COUNTRIES:?}
+      VPN_PORT_FORWARDING_DOWN_COMMAND: /bin/rm /protonvpn-port/protonvpn-port
     restart: unless-stopped
     cap_add:
       - NET_ADMIN
-    sysctls:
-      net.ipv4.conf.all.rp_filter: 2
-      net.ipv6.conf.all.disable_ipv6: 1
-      net.ipv4.conf.all.src_valid_mark: 1
+    devices:
+      - /dev/net/tun:/dev/net/tun
     volumes:
-      - ./protonvpn/config:/config
+      - ./protonvpn/gluetun:/gluetun
       - port:/protonvpn-port
-      - /lib/modules:/lib/modules
-    healthcheck:
-      test: /healthcheck.sh
-      interval: 40s
-      timeout: 5s
-      retries: 3
     ports:
       - 9091:9091
 
