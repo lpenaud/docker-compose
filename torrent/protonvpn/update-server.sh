@@ -9,6 +9,8 @@ declare email password
 
 read -p "Proton email: " email
 read -s -p "Proton password: " password
+# Clear after reading
+echo ""
 docker run --rm -v "${DIRNAME}/gluetun:/gluetun" \
   qmcgaw/gluetun \
   update \
