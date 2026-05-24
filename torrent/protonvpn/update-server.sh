@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Update proton vpn server list.
 # See: https://github.com/qdm12/gluetun-wiki/blob/main/setup/servers.md
 
