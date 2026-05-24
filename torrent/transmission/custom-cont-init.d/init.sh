@@ -34,3 +34,5 @@ else
   printf -v jq_expr '.["script-torrent-done-enabled"]=false'
 fi
 jq::safe "${jq_expr}" "${bak}" "${settings}"
+printf -v jq_expr '.["peer-port"]=%d' "$(< /protonvpn-port/protonvpn-port)"
+jq::safe "${jq_expr}" "${bak}" "${settings}"
