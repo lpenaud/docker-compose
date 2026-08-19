@@ -8,7 +8,7 @@ Use Proton VPN to share some files in P2P with the BitTorrent client Transmissio
 
 Credits:
 
--[qdm12/gluetun](https://github.com/passteque/gluetun)
+- [qdm12/gluetun](https://github.com/passteque/gluetun)
 - [linuxserver/docker-transmission](https://github.com/linuxserver/docker-transmission)
 - [ngosang/trackerslist](https://github.com/ngosang/trackerslist)
 
