@@ -10,7 +10,7 @@ services:
     container_name: nextcloud_pg
     restart: always
     volumes:
-      - db:/var/lib/postgresql/data
+      - db:/var/lib/postgresql
     environment:
       POSTGRES_USER: "${POSTGRES_USER:-nextcloud}"
       POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:?}"
