@@ -6,7 +6,7 @@ networks:
 
 services:
   db:
-    image: postgres:17-alpine
+    image: postgres:18-alpine
     container_name: nextcloud_pg
     restart: always
     volumes:
@@ -29,7 +29,7 @@ services:
       context: ./nextcloud
       dockerfile: Dockerfile
       args:
-        IMAGE_VERSION: 32
+        IMAGE_VERSION: 33
     container_name: nextcloud
     restart: always
     cap_add:
